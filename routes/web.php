@@ -1,56 +1,54 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\PagesController;
+use App\Http\Controllers\MessagesController;
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+/*
+Route::get('/',['as' => 'home', function () {
+]);*/
+/*Route::get('contacto',['as' => 'contactos', function () {
+return view('contactos');
+// return "Hola desde la pag de contacto";
+}]);*/
+/*Route::get('saludos/{nombre?}', function ($nombre="Invitado") {
+//return view('welcome');
+return "Saludos $nombre";
+});*/
+Route::get('/', [PagesController::class, 'home'])->name('home');
+//Route::post('contacto', [PagesController::class, 'mensaje']);
+//Route::get('contactos', [PagesController::class, 'contact'])->name('contactos');
+Route::get('saludos/{nombre?}', [PagesController::class, 'saludos'])->where('nombre', "[A-Za-z]+")->name('saludos');
+//Route::resource('messages', MessagesController::class);
+Route::get('messages/create', [MessagesController::class, 'create'])->name('messages.create');
+Route::get('messages', [MessagesController::class, 'index'])->name('messages.index');
+Route::get('messages/{id?}/edit/', [MessagesController::class, 'edit'])->name('messages.edit');
+Route::put('messages/{id}', [MessagesController::class, 'update'])->name('messages.update');
 
+Route::get('messages/{id?}', [MessagesController::class, 'show'])->name('messages.show');
+Route::post('messages', [MessagesController::class, 'store'])->name('messages.store');
+Route::delete('messages/{id?}', [MessagesController::class, 'destroy'])->name('messages.destroy');
+/*
+Route::get('/', [PagesController::class, 'home'])->name('home');
+Route::get('contactos', [PagesController::class, 'contact'])->name('contactos');
 
-// Esta es la ruta que uso para la vista home con un menú. Hace que cuando voy a la URL aparezca por
-//defecto la vista home.
-//Route es una clase de Laravel que gestiona todas las rutas de la aplicación.
-//get es un método de la clase Route para obtener datos del servidor(solicitudes HTTP GET).
-//as =>home es para darle un nombre a la ruta
-//function () no tiene parametros porque no necesita datos adicionales para mostrar la vista, solo carga y devuelve la vista home.
-//return view:home lo que hace es devolverle al usuario la solicitud que hizo para ver la página home.blade.php. O sea, esta linea de codigo es para que muestre la pagina home.
-//NOTA: '/' se refiere a la raiz de la aplicacion, en este caso la raiz es la página de inicio(home).
-Route::get('/', ['as' => 'home', function () {
-  return view('home');
+*/
+/*
+Route::get('saludos/{nombre?}', function ($nombre = "Invitado") {
+return view('saludos', compact('nombre'));
+})->where('nombre', "[A-Za-z]+")->name('saludos');
+*/
+/*
+Route::get('contactame',['as'=>'contacto',function(){
+return 'seccion contactarr';
 }]);
-
-
-
-// Esta es la ruta para 'salones_disponibles' con un parámetro opcional 'zona'
-//'/salones_disponibles/{zona} es la URL que activa la ruta.
-///{zona} es un parámetro. Cualquier valor que se coloque en esta posicion de la URL se va a pasar
-//a la funcion como parametro "zona"
-//en la funcion pongo $zona = 'Ituzaingo' para que tenga Ituzaingo por defecto para el parametro zona.
-//Si el usuario ingresa otro valor, se va a reemplazar Ituzaingo por ese valor que ingresó el usuario.
-//ctype_alpha es una funcion de PHP para validar que se ingresan letras sin importar si son minusculas o mayusculas.
-//En el if le estoy diciendo que si ingresó letras muestre la view (pasando el parámetro $zona a la view), 
-//sino que se detenga la ejecución del código y muestre un mensaje de error con el código de estado HTTP 400(400 significa "solicitud incorrecta")
-// ->name('salones_disponibles) es para ponerle un nombre a la ruta.
-Route::get('/salones_disponibles/{zona?}', function ($zona = 'Ituzaingo') {
-    if (ctype_alpha($zona)) {
-        return view('salones_disponibles', ['zona' => $zona]);
-    } else {
-        abort(400, "Zona inválida. Solo se permiten letras.");
-    }
-})->name('salones_disponibles');
-
-
-Route::get('/contacto/{numero}', function ($numero) {
-    // Validación para asegurarse de que solo se ingresen números con la funcion ctype_digit
-    if (ctype_digit($numero)) {
-        return view('contacto', ['numero' => $numero]);
-    } else {
-        abort(400, 'Número inválido. Solo se permiten números.');
-    }
-})->name('contacto');
-
-Route::get('/test-db', function () {
-    try {
-        DB::connection()->getPdo();
-        return 'Database connection is working!';
-    } catch (\Exception $e) {
-        return 'Could not connect to the database. Please check your configuration.';
-    }
-});
+*/
